@@ -7,7 +7,7 @@ from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTyp
 
 # ── CONFIG ──────────────────────────────────────────────────────
 import os
-TELEGRAM_TOKEN = os.environ.get("8752862358:AAFMzYtBoqQXh6NnOuXP1Ik3Qluu_DwdmHU")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 ITINERARY_PATH = "itinerary.md"
 ACTION_LIST_PATH = "action_list.md"
 
