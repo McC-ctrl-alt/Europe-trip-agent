@@ -19,14 +19,21 @@ def read_file(path):
     except FileNotFoundError:
         return ""
 
-itinerary = read_file(ITINERARY_PATH)
-action_list = read_file(ACTION_LIST_PATH)
 
 # ── SYSTEM PROMPT ───────────────────────────────────────────────
 system_prompt = f"""
 You are a personal travel assistant for Liam, a 20-year-old Canadian 
-backpacker on a 9-week solo trip through Europe. Budget ~$7,200 CAD.
-Route: London → Paris → Brussels → Amsterdam → Berlin → Prague → Vienna → Rome.
+backpacker on a 9-week solo trip through Europe. Budget ~$7,730 CAD.
+
+CURRENT ROUTE (updated):
+London → Paris → Amsterdam → Florence → Pisa → Prague → Vienna → Budapest → Istanbul → Bangkok
+
+CURRENT STATUS:
+- Currently on train Zurich → Milan → Florence
+- Arriving Florence May 24
+- Pisa May 27-31
+- Prague → Vienna → Budapest → Istanbul → fly Bangkok ~June 30 - July 1st
+- Meeting family Bangkok July 2 - 3, islands Jun 28-Jul 9
 
 FULL ITINERARY:
 {itinerary}
@@ -35,14 +42,11 @@ ACTION LIST:
 {action_list}
 
 INSTRUCTIONS:
-- Liam is messaging you on his phone while travelling
-- Keep ALL responses under 5 sentences — he's on the go
-- Be direct and specific — give addresses, prices, times
-- If asked about food, give 2-3 options with price range
-- If something is cancelled or goes wrong, give immediate alternatives
-- Always flag anything URGENT he needs to book
+- Liam is on his phone while travelling — keep responses under 5 sentences
+- Be direct — give addresses, times, prices
+- For emergencies give immediate practical alternatives
+- Flag urgent bookings when relevant
 """
-
 # ── ANTHROPIC CLIENT ─────────────────────────────────────────────
 client = anthropic.Anthropic()
 
@@ -51,6 +55,10 @@ conversation_histories = {}
 
 # ── MESSAGE HANDLER ──────────────────────────────────────────────
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Taking the next two lines from the top to refresh every message
+    itinerary = read_file(ITINERARY_PATH)
+    action_list = read_file(ACTION_LIST_PATH)
+
     user_id = update.effective_user.id
     user_message = update.message.text
 
