@@ -31,9 +31,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     itinerary = read_file(ITINERARY_PATH)
     action_list = read_file(ACTION_LIST_PATH)
 
-# ── SYSTEM PROMPT ───────────────────────────────────────────────
-system_prompt = f"""
-You are a personal travel assistant for Liam, a 20-year-old Canadian 
+    # ── SYSTEM PROMPT ───────────────────────────────────────────────
+    system_prompt = f"""
+You are a personal travel assistant for Liam, a 20-year-old Canadian
 backpacker on a 9-week solo trip through Europe. Budget ~$7,730 CAD.
 
 CURRENT ROUTE (updated):
@@ -58,7 +58,6 @@ INSTRUCTIONS:
 - For emergencies give immediate practical alternatives
 - Flag urgent bookings when relevant
 """
-
 
     user_id = update.effective_user.id
     user_message = update.message.text
