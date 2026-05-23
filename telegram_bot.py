@@ -20,6 +20,17 @@ def read_file(path):
         return ""
 
 
+# ── ANTHROPIC CLIENT ─────────────────────────────────────────────
+client = anthropic.Anthropic()
+
+# Store conversation history per user
+conversation_histories = {}
+
+# ── MESSAGE HANDLER ──────────────────────────────────────────────
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    itinerary = read_file(ITINERARY_PATH)
+    action_list = read_file(ACTION_LIST_PATH)
+
 # ── SYSTEM PROMPT ───────────────────────────────────────────────
 system_prompt = f"""
 You are a personal travel assistant for Liam, a 20-year-old Canadian 
@@ -47,17 +58,7 @@ INSTRUCTIONS:
 - For emergencies give immediate practical alternatives
 - Flag urgent bookings when relevant
 """
-# ── ANTHROPIC CLIENT ─────────────────────────────────────────────
-client = anthropic.Anthropic()
 
-# Store conversation history per user
-conversation_histories = {}
-
-# ── MESSAGE HANDLER ──────────────────────────────────────────────
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Taking the next two lines from the top to refresh every message
-    itinerary = read_file(ITINERARY_PATH)
-    action_list = read_file(ACTION_LIST_PATH)
 
     user_id = update.effective_user.id
     user_message = update.message.text
