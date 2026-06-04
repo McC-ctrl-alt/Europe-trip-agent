@@ -62,7 +62,6 @@ def read_gmail_confirmations(creds):
         "Flixbus after:2026/05/01",
         "Eurostar after:2026/05/01",
         "easyJet after:2026/05/01",
-        "Ryanair after:2026/05/01",
         "booking confirmed",
         "your itinerary",
         "e-ticket",
@@ -176,6 +175,7 @@ For each booking found, extract ONLY:
 - Cost (exact, as written)
 - Source email subject line
 - Route: London → Paris → Amsterdam → Florence → Pisa → Prague → Budapest → Zagreb → Split → Korcula → Dubrovnik → Albania → Greece → Istanbul → Bangkok
+- Dates in each city: London: May 10th to 14th, Paris: May 14th to May 18th, Amsterdam: May 18th to May 23rd, Florence: May 23rd to May 27th, Pisa: May 27th to May 31st, Prague: May 31st to June 4th, Budapest: June 4th to June 8th, Zagreb: June 8th to June 10th, Split: June 10th to June 13th, Korcula: June 13th to June 17th, Dubrovnik: June 17th to June 20th, Albania: June 20th to June 23rd, Greece: June 23th to June 27th, Istanbul: June 27th to June 30th, Bangkok: June 30th to July 5th
 
 EMAILS PROVIDED:
 {json.dumps(emails, indent=2)}
