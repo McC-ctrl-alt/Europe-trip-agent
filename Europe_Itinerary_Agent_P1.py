@@ -25,8 +25,8 @@ SCOPES = [
 # ── AUTH ─────────────────────────────────────────────────────────────────────
 def get_credentials():
     creds = None
-    token_env = os.environ.get("GOOGLE_TOKEN_JSON")
-    creds_env = os.environ.get("GOOGLE_CREDENTIALS_JSON")
+    token_env = os.environ.get("TOKEN_JSON")
+    creds_env = os.environ.get("CREDENTIALS_JSON")
 
     if token_env:
         creds = Credentials.from_authorized_user_info(json.loads(token_env), SCOPES)
