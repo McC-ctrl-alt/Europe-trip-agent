@@ -2,8 +2,12 @@
 # Phase 3 wired to Telegram
 
 import anthropic
+import asyncio
+from datetime import datetime
 from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+from Europe_Itinerary_Agent_P1 import run_phase1_agent
+from Europe_Itinerary_Agent_P2 import run_phase2_agent
 
 # ── CONFIG ──────────────────────────────────────────────────────
 import os
@@ -32,19 +36,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     action_list = read_file(ACTION_LIST_PATH)
 
     # ── SYSTEM PROMPT ───────────────────────────────────────────────
+    today = datetime.now().strftime("%A, %B %d, %Y")
     system_prompt = f"""
 You are a personal travel assistant for Liam, a 20-year-old Canadian
 backpacker on a 9-week solo trip through Europe. Budget ~$7,730 CAD.
 
-CURRENT ROUTE (updated):
-London → Paris → Amsterdam → Florence → Pisa → Prague → Vienna → Budapest → Istanbul → Bangkok
+TODAY'S DATE: {today}
 
-CURRENT STATUS:
-- Currently on train Zurich → Milan → Florence
-- Arriving Florence May 24
-- Pisa May 27-31
-- Prague → Vienna → Budapest → Istanbul → fly Bangkok ~June 30 - July 1st
-- Meeting family Bangkok July 2 - 3, islands Jun 28-Jul 9
+CURRENT ROUTE (updated):
+London → Paris → Amsterdam → Florence → Pisa → Prague → Budapest → Zagreb → Split → Korcula → Dubrovnik → Albania → Greece → Istanbul → Bangkok
 
 FULL ITINERARY:
 {itinerary}
@@ -97,10 +97,23 @@ INSTRUCTIONS:
     # Send reply back to Telegram
     await update.message.reply_text(reply)
 
+# ── REFRESH HANDLER ──────────────────────────────────────────────
+async def handle_refresh(update: Update, _context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Refreshing itinerary from Excel and Gmail...")
+    loop = asyncio.get_event_loop()
+    try:
+        await loop.run_in_executor(None, run_phase1_agent)
+        await update.message.reply_text("Phase 1 done. Rebuilding action list...")
+        await loop.run_in_executor(None, run_phase2_agent)
+        await update.message.reply_text("Done! Itinerary and action list updated.")
+    except Exception as e:
+        await update.message.reply_text(f"Refresh failed: {e}")
+
 # ── RUN BOT ──────────────────────────────────────────────────────
 if __name__ == "__main__":
     print("🤖 Travel bot starting...")
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
+    app.add_handler(CommandHandler("refresh", handle_refresh))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     print("✅ Bot is running! Message it on Telegram.")
-    app.run_polling()
+    app.run_polling(drop_pending_updates=True)
