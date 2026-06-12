@@ -56,19 +56,19 @@ def read_gmail_confirmations(creds):
 
     search_queries = [
         "reservation confirmed after:2026/05/01",
-        "St. Christopher's after:2026/05/01",
-        "Porter Airlines after:2026/05/01",
         "Expedia after:2026/05/01",
         "FlixBus after:2026/05/01",
         "Flix after:2026/05/01"
         "Eurail.com after:2026/05/01",
-        "Eurail.com after:2026/05/01",
-        "easyJet after:2026/05/01",
         "booking confirmed",
         "your itinerary",
         "eticket",
+        "reservation",
         "Porter Airlines",
         "Expedia booking",
+        "SKY express",
+        "Expedia.ca",
+        "flight purchase confirmation",
         "Thai Airways",
         "Lomprayah",
         "Ko Samui",
